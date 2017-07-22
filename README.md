@@ -15,10 +15,10 @@ b) run scrpper
 
 
 Login rch
-rhc -l setup email
+`rhc -l setup email`
 
 Setting up Envs
-rhc env set NPM_CONFIG_PRODUCTION=true -a app
+`rhc env set NPM_CONFIG_PRODUCTION=true -a app`
 
 Checking Envs
-rhc env list -a app
+`rhc env list -a app`

@@ -50,6 +50,20 @@ describe('ScrapperUtil', () => {
       });
     });
 
+    describe('no promise', () => {
+
+      it('returns false when invalid param sent', () => {
+        let response = ScrapperUtil.getSource();
+        expect(response).to.be.false;
+
+        response = ScrapperUtil.postNews('');
+        expect(response).to.be.false;
+
+        response = ScrapperUtil.postNews(null);
+        expect(response).to.be.false;
+      });
+    });
+
   });
 
   describe('#extractNews', () => {
@@ -74,6 +88,59 @@ describe('ScrapperUtil', () => {
       it('does not execute extractacor when invalid source sent', () => {
         ScrapperUtil.extractNews('invalid_source', '');
         expect(AristeguiNoticiasScrapper.extractNews.called).to.be.false;
+      });
+    });
+
+  });
+
+  describe('#postNews', () => {
+    const url = 'url';
+
+    describe('promise fulfilled', () => {
+
+      beforeEach(() => {
+        sinon.stub(ScrapperUtil, 'postNews').callsFake(() => new Promise((resolve) => resolve()));
+      });
+
+      afterEach(() => {
+        ScrapperUtil.postNews.restore();
+      });
+
+      it('resolves promise', () => {
+        expect(ScrapperUtil.postNews('uri', 'source', 'news')).to.eventually.be.fulfilled;
+      });
+    });
+
+
+    describe('promise rejected', () => {
+
+      beforeEach(() => {
+        sinon.stub(ScrapperUtil, 'postNews').callsFake(() => new Promise((resolve, reject) => reject()));
+      });
+
+      afterEach(() => {
+        ScrapperUtil.postNews.restore();
+      });
+
+      it('rejects promise', () => {
+        expect(ScrapperUtil.postNews('uri', 'source', 'news')).to.eventually.be.rejected;
+      });
+    });
+
+    describe('no promise', () => {
+
+      it('returns false when invalid params sent', () => {
+        let response = ScrapperUtil.postNews(null, null, null);
+        expect(response).to.be.false;
+
+        response = ScrapperUtil.postNews('uri', null, null);
+        expect(response).to.be.false;
+
+        response = ScrapperUtil.postNews(null, 'source', null);
+        expect(response).to.be.false;
+
+        response = ScrapperUtil.postNews(null, null, [1]);
+        expect(response).to.be.false;
       });
     });
 
