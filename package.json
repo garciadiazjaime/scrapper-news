@@ -7,7 +7,8 @@
     "build": "./node_modules/babel-cli/bin/babel.js src -d build",
     "postinstall": "postinstall-build lib",
     "scrapper": "node --use_strict build/main.js",
-    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js"
+    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js",
+    "lint": "./node_modules/.bin/eslint ."
   },
   "repository": {},
   "license": "MIT",
@@ -21,10 +22,16 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.3",
     "babel-preset-latest": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
     "chai": "^4.1.0",
     "chai-as-promised": "^7.1.1",
+    "eslint": "^4.3.0",
+    "eslint-config-airbnb": "^15.0.2",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.1.0",
     "mocha": "^3.4.2",
     "sinon": "^2.3.8"
   },

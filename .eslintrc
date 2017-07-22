@@ -1,5 +1,7 @@
+"extends": "airbnb"
 parser: babel-eslint
 rules:
   quotes:
     - 1
     - single
+  jsx-a11y/href-no-hash: off
