@@ -5,40 +5,32 @@ import sinon from 'sinon';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import scrapperUtil from '../../../src/utils/scrapperUtil';
+import ScrapperUtil from '../../../src/utils/scrapperUtil';
+import AristeguiNoticiasScrapper from '../../../src/utils/scrapperUtil/aristeguiNoticiasScrapper';
 import constants from '../../../src/constants';
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
-const url = 'http://aristeguinoticias.com/';
 const filePath = path.join(__dirname, '../../stub/aristeguinoticias.com.html');
 
 
-describe('scrapperUtil', () => {
+describe('ScrapperUtil', () => {
 
-  describe('getSource', () => {
+  describe('#getSource', () => {
+    const url = 'url';
 
     describe('promise fulfilled', () => {
 
       beforeEach(() => {
-        sinon.stub(scrapperUtil, 'getSource').callsFake(() => {
-          return new Promise((resolve, reject) => {
-            fs.readFile(filePath, 'utf8', (err, data) => {
-              if (err) {
-                return reject(err);
-              }
-              resolve(data);
-            });
-          });
-        });
+        sinon.stub(ScrapperUtil, 'getSource').callsFake(() => new Promise((resolve) => resolve()));
       });
 
       afterEach(() => {
-        scrapperUtil.getSource.restore();
+        ScrapperUtil.getSource.restore();
       });
 
       it('return promise with htmlString', () => {
-        expect(scrapperUtil.getSource(url)).to.eventually.be.fulfilled;
+        expect(ScrapperUtil.getSource(url)).to.eventually.be.fulfilled;
       });
     });
 
@@ -46,40 +38,42 @@ describe('scrapperUtil', () => {
     describe('promise rejected', () => {
 
       beforeEach(() => {
-        sinon.stub(scrapperUtil, 'getSource').callsFake(() => {
-          return Promise.reject();
-        });
+        sinon.stub(ScrapperUtil, 'getSource').callsFake(() => new Promise((resolve, reject) => reject()));
       });
 
       afterEach(() => {
-        scrapperUtil.getSource.restore();
+        ScrapperUtil.getSource.restore();
       });
 
       it('returns promise rejected', () => {
-        expect(scrapperUtil.getSource(url)).to.eventually.be.rejected;
+        expect(ScrapperUtil.getSource(url)).to.be.rejected;
       });
     });
 
   });
 
-  describe.only('extractNews', () => {
+  describe('#extractNews', () => {
 
-    describe('promise fulfilled', () => {
+    describe('AristeguiNoticiasScrapper', () => {
 
       beforeEach(() => {
-
+        sinon.stub(AristeguiNoticiasScrapper, 'extractNews');
       });
 
       afterEach(() => {
-        // scrapperUtil.getSource.restore();
+        AristeguiNoticiasScrapper.extractNews.restore();
       });
 
-      it('getSource', () => {
-        fs.readFile(filePath, 'utf8', (err, data) => {
-          expect(err).to.equal(null);
-          const news = scrapperUtil.extractNews(constants.source.aristeguinoticias, data);
-          console.log('news', news);
-        });
+      it('calls right source', () => {
+        const htmlString = 'htmlString';
+        ScrapperUtil.extractNews(constants.source.aristeguinoticias, htmlString);
+        expect(AristeguiNoticiasScrapper.extractNews.calledOnce).to.be.true;
+        expect(AristeguiNoticiasScrapper.extractNews.calledWith(htmlString)).to.be.true;
+      });
+
+      it('does not execute extractacor when invalid source sent', () => {
+        ScrapperUtil.extractNews('invalid_source', '');
+        expect(AristeguiNoticiasScrapper.extractNews.called).to.be.false;
       });
     });
 
