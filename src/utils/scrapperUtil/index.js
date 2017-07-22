@@ -27,7 +27,7 @@ export default class ScrapperUtil {
   // @param {string} htmlString - news source page (html)
   // @return {array|false} - either returns array with news extracted or false
   static extractNews(source, htmlString) {
-    if (source === constants.source.aristeguinoticias) {
+    if (source === constants.source.aristeguinoticias.id) {
       return AristeguiNoticiasScrapper.extractNews(htmlString);
     }
     return false;

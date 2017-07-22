@@ -1,6 +1,9 @@
 
 export default {
   source: {
-    aristeguinoticias: 1,
+    aristeguinoticias: {
+      id: 1,
+      url: 'http://aristeguinoticias.com/',
+    },
   },
 };
