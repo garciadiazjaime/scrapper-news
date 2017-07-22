@@ -7,7 +7,8 @@
     "build": "./node_modules/babel-cli/bin/babel.js src -d build",
     "postinstall": "postinstall-build lib",
     "scrapper": "node --use_strict build/main.js",
-    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js",
+    "test": "npm run lint && npm run unittest",
+    "unittest": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js",
     "lint": "./node_modules/.bin/eslint ."
   },
   "repository": {},
