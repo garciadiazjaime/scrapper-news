@@ -7,7 +7,7 @@ const { url, id } = constants.source.aristeguinoticias;
 
 ScrapperUtil.getSource(url)
   .then(response => ScrapperUtil.extractNews(id, response))
-  .then(news => ScrapperUtil.postNews(config.get('api.url'), id, news))
+  .then(news => ScrapperUtil.postNews(`${config.get('api.url')}api/news`, id, news))
   .then(() => {
     console.log(new Date());
     console.log(`successfully scrapped: ${url}`);

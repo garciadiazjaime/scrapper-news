@@ -44,8 +44,7 @@ export default class ScrapperUtil {
           method: 'POST',
           uri,
           body: {
-            source,
-            news,
+            data: news,
           },
           json: true,
       };
