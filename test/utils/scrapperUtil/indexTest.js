@@ -46,7 +46,7 @@ describe('ScrapperUtil', () => {
       });
 
       it('returns promise rejected', () => {
-        expect(ScrapperUtil.getSource(url)).to.be.rejected;
+        expect(ScrapperUtil.getSource(url)).to.eventually.be.rejected;
       });
     });
 
