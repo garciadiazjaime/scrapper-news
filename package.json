@@ -1,9 +1,10 @@
 {
   "name": "scrapper-news",
+  "description": "News web scrapper",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node --use_strict src/main.js",
+    "start": "npm run babel && node --use_strict build/main.js",
     "babel": "./node_modules/babel-cli/bin/babel.js src -d build",
     "test": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js"
   },
@@ -11,7 +12,9 @@
   "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
+    "convict": "^4.0.0",
     "express": "^4.15.3",
+    "lodash": "^4.17.4",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },
