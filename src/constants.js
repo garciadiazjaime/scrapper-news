@@ -2,8 +2,12 @@
 export default {
   source: {
     aristeguinoticias: {
-      id: 1,
+      code: 'aristeguinoticias',
       url: 'http://aristeguinoticias.com/',
+    },
+    eleconomista: {
+      code: 'eleconomista',
+      url: 'http://eleconomista.com.mx',
     },
   },
 };

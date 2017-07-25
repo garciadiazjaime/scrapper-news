@@ -80,7 +80,7 @@ describe('ScrapperUtil', () => {
 
       it('calls right source', () => {
         const htmlString = 'htmlString';
-        ScrapperUtil.extractNews(constants.source.aristeguinoticias.id, htmlString);
+        ScrapperUtil.extractNews(constants.source.aristeguinoticias.code, htmlString);
         expect(AristeguiNoticiasScrapper.extractNews.calledOnce).to.be.true;
         expect(AristeguiNoticiasScrapper.extractNews.calledWith(htmlString)).to.be.true;
       });
@@ -107,7 +107,7 @@ describe('ScrapperUtil', () => {
       });
 
       it('resolves promise', () => {
-        expect(ScrapperUtil.postNews('uri', 'source', 'news')).to.eventually.be.fulfilled;
+        expect(ScrapperUtil.postNews('uri', 'news')).to.eventually.be.fulfilled;
       });
     });
 
@@ -123,23 +123,20 @@ describe('ScrapperUtil', () => {
       });
 
       it('rejects promise', () => {
-        expect(ScrapperUtil.postNews('uri', 'source', 'news')).to.eventually.be.rejected;
+        expect(ScrapperUtil.postNews('uri', 'news')).to.eventually.be.rejected;
       });
     });
 
     describe('no promise', () => {
 
       it('returns false when invalid params sent', () => {
-        let response = ScrapperUtil.postNews(null, null, null);
+        let response = ScrapperUtil.postNews(null, null);
         expect(response).to.be.false;
 
-        response = ScrapperUtil.postNews('uri', null, null);
+        response = ScrapperUtil.postNews('uri', null);
         expect(response).to.be.false;
 
-        response = ScrapperUtil.postNews(null, 'source', null);
-        expect(response).to.be.false;
-
-        response = ScrapperUtil.postNews(null, null, [1]);
+        response = ScrapperUtil.postNews(null, [1]);
         expect(response).to.be.false;
       });
     });

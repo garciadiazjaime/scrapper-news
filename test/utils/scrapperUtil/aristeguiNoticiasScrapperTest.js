@@ -15,7 +15,7 @@ describe('AristeguiNoticiasScrapper', () => {
 
     it('extracts news when valid html source is passed', (done) => {
       fs.readFile(filePath, 'utf8', (err, data) => {
-        const news = scrapperUtil.extractNews(constants.source.aristeguinoticias.id, data);
+        const news = scrapperUtil.extractNews(constants.source.aristeguinoticias.code, data);
         expect(err).to.equal(null);
         expect(news.length).to.equal(10);
         expect(news[0]).to.have.all.keys('title', 'image', 'link', 'source');
@@ -24,7 +24,7 @@ describe('AristeguiNoticiasScrapper', () => {
     });
 
     it('returns empty array when empty html source is passed', () => {
-      const news = scrapperUtil.extractNews(constants.source.aristeguinoticias.id, "");
+      const news = scrapperUtil.extractNews(constants.source.aristeguinoticias.code, "");
       expect(news.length).to.equal(0);
     });
 

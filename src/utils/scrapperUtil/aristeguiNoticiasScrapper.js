@@ -12,7 +12,7 @@ export default class AristeguiNoticiasScrapper {
   static extractNews(htmlString) {
     const data = [];
     const jQuery = cheerio.load(htmlString);
-    const source = constants.source.aristeguinoticias.id;
+    const { code } = constants.source.aristeguinoticias;
 
     jQuery('.img_principal .imgTML').filter((index, element) => {
       const title = jQuery(element).find('.title_content2 span').text();
@@ -22,7 +22,7 @@ export default class AristeguiNoticiasScrapper {
         title,
         image,
         link,
-        source,
+        source: code,
       };
       return data.push(item);
     });
