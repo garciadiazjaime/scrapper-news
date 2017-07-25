@@ -80,7 +80,7 @@ describe('ScrapperUtil', () => {
 
       it('calls right source', () => {
         const htmlString = 'htmlString';
-        ScrapperUtil.extractNews(constants.source.aristeguinoticias.id, htmlString);
+        ScrapperUtil.extractNews(constants.source.aristeguinoticias.code, htmlString);
         expect(AristeguiNoticiasScrapper.extractNews.calledOnce).to.be.true;
         expect(AristeguiNoticiasScrapper.extractNews.calledWith(htmlString)).to.be.true;
       });

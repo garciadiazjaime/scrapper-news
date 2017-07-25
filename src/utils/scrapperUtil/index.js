@@ -23,11 +23,11 @@ export default class ScrapperUtil {
   };
 
   // based on source it will call appropiate news extractor
-  // @param {string} source - eg. news name
+  // @param {string} sourceCode - eg. news name
   // @param {string} htmlString - news source page (html)
   // @return {array|false} - either returns array with news extracted or false
-  static extractNews(source, htmlString) {
-    if (source === constants.source.aristeguinoticias.id) {
+  static extractNews(sourceCode, htmlString) {
+    if (sourceCode === constants.source.aristeguinoticias.code) {
       return AristeguiNoticiasScrapper.extractNews(htmlString);
     }
     return false;

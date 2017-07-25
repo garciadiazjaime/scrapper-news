@@ -2,7 +2,7 @@
 export default {
   source: {
     aristeguinoticias: {
-      id: 1,
+      code: 'aristeguinoticias',
       url: 'http://aristeguinoticias.com/',
     },
   },
