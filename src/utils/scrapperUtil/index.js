@@ -2,6 +2,7 @@ import request from 'request-promise-native';
 import { isEmpty, isArray } from 'lodash';
 
 import AristeguiNoticiasScrapper from './aristeguiNoticiasScrapper';
+import ElEconomista from './eleconomista';
 import constants from '../../constants';
 
 
@@ -27,19 +28,21 @@ export default class ScrapperUtil {
   // @param {string} htmlString - news source page (html)
   // @return {array|false} - either returns array with news extracted or false
   static extractNews(sourceCode, htmlString) {
-    if (sourceCode === constants.source.aristeguinoticias.code) {
-      return AristeguiNoticiasScrapper.extractNews(htmlString);
+    switch (sourceCode) {
+      case constants.source.aristeguinoticias.code:
+        return AristeguiNoticiasScrapper.extractNews(htmlString);
+      case constants.source.eleconomista.code:
+        return ElEconomista.extractNews(htmlString);
     }
     return false;
   }
 
   // post news to api in order to save them
   // @param {string} uri - endpoint to post
-  // @param {string} source - eg. news website id
   // @param {array} news
   // @return {promise}
-  static postNews(uri, source, news) {
-    if (!isEmpty(uri) && source && isArray(news) && news.length) {
+  static postNews(uri, news) {
+    if (!isEmpty(uri) && isArray(news) && news.length) {
       const options = {
           method: 'POST',
           uri,
@@ -51,5 +54,19 @@ export default class ScrapperUtil {
       return request(options);
     }
     return false;
+  }
+
+  static getImages(sourceCode, news) {
+    switch (sourceCode) {
+      case constants.source.eleconomista.code:
+        const promises = news.map((item) => {
+          return this.getSource(item.link);
+        });
+
+        return Promise.all(promises)
+          .then((results) => ElEconomista.processImages(news, results))
+          .catch(() => news);
+    }
+    return Promise.resolve(news);
   }
 }

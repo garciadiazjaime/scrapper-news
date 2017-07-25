@@ -5,5 +5,9 @@ export default {
       code: 'aristeguinoticias',
       url: 'http://aristeguinoticias.com/',
     },
+    eleconomista: {
+      code: 'eleconomista',
+      url: 'http://eleconomista.com.mx',
+    },
   },
 };
