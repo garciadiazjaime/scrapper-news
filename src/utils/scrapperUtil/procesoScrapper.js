@@ -2,7 +2,7 @@ import cheerio from 'cheerio';
 
 import constants from '../../constants';
 
-const removeDimentionFromImage = (image) => image.replace(/\-[\d]+x[\d]+\./, '.');
+const removeDimentionFromImage = (image) => image ? image.replace(/\-[\d]+x[\d]+\./, '.') : image;
 
 // Utility to scrap specific source
 export default class Proceso {
@@ -18,7 +18,8 @@ export default class Proceso {
     jQuery('.main-featured .slider li').filter((index, element) => {
       const title = jQuery(element).find('.caption a').text();
       const link = jQuery(element).find('.caption a').attr('href');
-      const image = jQuery(element).find('img').attr('src');
+      const image = jQuery(element).find('img').data('cfsrc');
+
       const item = {
         title,
         link,
@@ -31,7 +32,8 @@ export default class Proceso {
     jQuery('.main-featured .blocks article').filter((index, element) => {
       const title = jQuery(element).find('h3 a').text();
       const link = jQuery(element).find('h3 a').attr('href');
-      let image = jQuery(element).find('img').attr('src');
+      const image = jQuery(element).find('img').data('cfsrc');
+
       const item = {
         title,
         link,
