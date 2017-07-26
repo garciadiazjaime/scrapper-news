@@ -3,7 +3,7 @@ import ScrapperUtil from './utils/scrapperUtil';
 import config from './config';
 import constants from './constants';
 
-const sources = ['aristeguinoticias', 'eleconomista'];
+const sources = Object.keys(constants.source);
 
 sources.forEach((source) => {
   const { code, url } = constants.source[source];

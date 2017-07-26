@@ -2,7 +2,8 @@ import request from 'request-promise-native';
 import { isEmpty, isArray } from 'lodash';
 
 import AristeguiNoticiasScrapper from './aristeguiNoticiasScrapper';
-import ElEconomista from './eleconomista';
+import ElEconomistaScrapper from './eleconomistaScrapper';
+import ProcesoScrapper from './procesoScrapper';
 import constants from '../../constants';
 
 
@@ -32,7 +33,9 @@ export default class ScrapperUtil {
       case constants.source.aristeguinoticias.code:
         return AristeguiNoticiasScrapper.extractNews(htmlString);
       case constants.source.eleconomista.code:
-        return ElEconomista.extractNews(htmlString);
+        return ElEconomistaScrapper.extractNews(htmlString);
+      case constants.source.proceso.code:
+        return ProcesoScrapper.extractNews(htmlString);
     }
     return false;
   }
@@ -56,6 +59,10 @@ export default class ScrapperUtil {
     return false;
   }
 
+  // get images
+  // @param {string} sourceCode - html page
+  // @param {array} news
+  // @return {promise} - news where items are extended if image is found
   static getImages(sourceCode, news) {
     switch (sourceCode) {
       case constants.source.eleconomista.code:
@@ -64,7 +71,7 @@ export default class ScrapperUtil {
         });
 
         return Promise.all(promises)
-          .then((results) => ElEconomista.processImages(news, results))
+          .then((results) => ElEconomistaScrapper.processImages(news, results))
           .catch(() => news);
     }
     return Promise.resolve(news);

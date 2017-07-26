@@ -9,5 +9,9 @@ export default {
       code: 'eleconomista',
       url: 'http://eleconomista.com.mx',
     },
+    proceso: {
+      code: 'proceso',
+      url: 'http://www.proceso.com.mx/',
+    },
   },
 };
