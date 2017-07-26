@@ -2,7 +2,8 @@ import request from 'request-promise-native';
 import { isEmpty, isArray } from 'lodash';
 
 import AristeguiNoticiasScrapper from './aristeguiNoticiasScrapper';
-import ElEconomista from './eleconomista';
+import ElEconomista from './eleconomistaScrapper';
+import Proceso from './procesoScrapper';
 import constants from '../../constants';
 
 
@@ -33,6 +34,8 @@ export default class ScrapperUtil {
         return AristeguiNoticiasScrapper.extractNews(htmlString);
       case constants.source.eleconomista.code:
         return ElEconomista.extractNews(htmlString);
+      case constants.source.proceso.code:
+        return Proceso.extractNews(htmlString);
     }
     return false;
   }
