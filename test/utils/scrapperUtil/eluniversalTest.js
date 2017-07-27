@@ -9,26 +9,27 @@ import constants from '../../../src/constants';
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
-const filePath = path.join(__dirname, '../../stub/eleconomista.com.mx.html');
-const fileImagePath = path.join(__dirname, '../../stub/eleconomista.com.mx-article.html');
+const filePath = path.join(__dirname, '../../stub/eluniversal.com.mx.html');
+const fileArticlePath = path.join(__dirname, '../../stub/eluniversal.com.mx-article.html');
 
 
-describe('ElEconomista', () => {
+describe('ElUniversal', () => {
 
   describe('#extractNews', () => {
 
     it('extracts news when valid html source is passed', (done) => {
       fs.readFile(filePath, 'utf8', (err, data) => {
-        const news = scrapperUtil.extractNews(constants.source.eleconomista.code, data);
+        const news = scrapperUtil.extractNews(constants.source.eluniversal.code, data);
+
         expect(err).to.equal(null);
-        expect(news.length).to.equal(7);
+        expect(news.length).to.equal(14);
         expect(news[0]).to.have.all.keys('title', 'link', 'source');
         done();
       });
     });
 
     it('returns empty array when empty html source is passed', () => {
-      const news = scrapperUtil.extractNews(constants.source.eleconomista.code, "");
+      const news = scrapperUtil.extractNews(constants.source.eluniversal.code, "");
       expect(news.length).to.equal(0);
     });
 
@@ -53,11 +54,12 @@ describe('ElEconomista', () => {
       });
 
       it('extracts news when valid html source is passed', (done) => {
-        fs.readFile(fileImagePath, 'utf8', (err, data) => {
+        fs.readFile(fileArticlePath, 'utf8', (err, data) => {
           sinon.stub(scrapperUtil, 'getSource').callsFake(() => Promise.resolve(data));
 
-          scrapperUtil.getImages(constants.source.eleconomista.code, news)
+          scrapperUtil.getImages(constants.source.eluniversal.code, news)
             .then((response) => {
+
               expect(response.length).to.equal(2);
               expect(response[0]).to.have.all.keys('title', 'image');
               done();
@@ -78,7 +80,7 @@ describe('ElEconomista', () => {
       });
 
       it('returns initial array when promise rejected', () => {
-        expect(scrapperUtil.getImages(constants.source.eleconomista.code, news))
+        expect(scrapperUtil.getImages(constants.source.eluniversal.code, news))
           .to.eventually.deep.equal(news);
       });
 

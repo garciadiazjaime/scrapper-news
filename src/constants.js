@@ -13,5 +13,9 @@ export default {
       code: 'proceso',
       url: 'http://www.proceso.com.mx/',
     },
+    eluniversal: {
+      code: 'eluniversal',
+      url: 'http://www.eluniversal.com.mx/',
+    },
   },
 };
