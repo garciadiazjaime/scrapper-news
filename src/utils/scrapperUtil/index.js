@@ -4,6 +4,7 @@ import { isEmpty, isArray } from 'lodash';
 import AristeguiNoticiasScrapper from './aristeguiNoticiasScrapper';
 import ElEconomistaScrapper from './eleconomistaScrapper';
 import ProcesoScrapper from './procesoScrapper';
+import ElUniversal from './eluniversalScrapper';
 import constants from '../../constants';
 
 
@@ -36,6 +37,8 @@ export default class ScrapperUtil {
         return ElEconomistaScrapper.extractNews(htmlString);
       case constants.source.proceso.code:
         return ProcesoScrapper.extractNews(htmlString);
+      case constants.source.eluniversal.code:
+        return ElUniversal.extractNews(htmlString);
     }
     return false;
   }
@@ -66,12 +69,12 @@ export default class ScrapperUtil {
   static getImages(sourceCode, news) {
     switch (sourceCode) {
       case constants.source.eleconomista.code:
-        const promises = news.map((item) => {
-          return this.getSource(item.link);
-        });
-
-        return Promise.all(promises)
-          .then((results) => ElEconomistaScrapper.processImages(news, results))
+        return Promise.all(news.map(item => this.getSource(item.link)))
+          .then(results => ElEconomistaScrapper.processImages(news, results))
+          .catch(() => news);
+      case constants.source.eluniversal.code:
+        return Promise.all(news.map(item => this.getSource(item.link)))
+          .then(results => ElUniversal.processImages(news, results))
           .catch(() => news);
     }
     return Promise.resolve(news);
