@@ -22,7 +22,7 @@ export default class Proceso {
 
       const item = {
         title,
-        link,
+        link: `http:${link}`,
         image: removeDimentionFromImage(image),
         source: code,
       };
@@ -36,7 +36,7 @@ export default class Proceso {
 
       const item = {
         title,
-        link,
+        link: `http:${link}`,
         image: removeDimentionFromImage(image),
         source: code,
       };
@@ -44,6 +44,30 @@ export default class Proceso {
     });
 
     return data;
+  }
+
+  static extractArticle(htmlString) {
+    const description = [];
+    const jQuery = cheerio.load(htmlString);
+
+    jQuery('.post-content.description p').filter((index, element) => {
+      if (jQuery(element).text()) {
+        description.push(jQuery(element).text());
+      }
+    });
+
+    return {
+      description,
+    };
+  }
+
+  static getArticle(news, results) {
+    const data = results.map(this.extractArticle);
+    news.forEach((item, index) => {
+      item.description = data[index].description;
+    });
+
+    return news;
   }
 
 }
