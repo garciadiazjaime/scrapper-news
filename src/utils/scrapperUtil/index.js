@@ -76,6 +76,14 @@ export default class ScrapperUtil {
         return Promise.all(news.map(item => this.getSource(item.link)))
           .then(results => ElUniversal.processImages(news, results))
           .catch(() => news);
+      case constants.source.aristeguinoticias.code:
+        return Promise.all(news.map(item => this.getSource(item.link)))
+          .then(results => AristeguiNoticiasScrapper.getArticle(news, results))
+          .catch(() => news);
+      case constants.source.proceso.code:
+        return Promise.all(news.map(item => this.getSource(item.link)))
+          .then(results => ProcesoScrapper.getArticle(news, results))
+          .catch(() => news);
     }
     return Promise.resolve(news);
   }

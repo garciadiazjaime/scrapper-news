@@ -28,4 +28,33 @@ export default class AristeguiNoticiasScrapper {
     });
     return data;
   }
+
+  static extractArticle(htmlString) {
+    const description = [];
+    const jQuery = cheerio.load(htmlString);
+
+    jQuery('.class_text p').filter((index, element) => {
+      if (jQuery(element).text()) {
+        description.push(jQuery(element).text());
+      }
+    });
+
+    if (!description.length) {
+      jQuery('.sub_content').filter((index, element) => {
+        description.push(jQuery(element).text());
+      });
+    }
+
+    return {
+      description,
+    };
+  }
+
+  static getArticle(news, results) {
+    const data = results.map(this.extractArticle);
+    news.forEach((item, index) => {
+      item.description = data[index].description;
+    });
+    return news;
+  }
 }
