@@ -11,6 +11,7 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 const filePath = path.join(__dirname, '../../stub/eluniversal.com.mx.html');
 const fileArticlePath = path.join(__dirname, '../../stub/eluniversal.com.mx-article.html');
+const fileArticleFallbackImagePath = path.join(__dirname, '../../stub/eluniversal.com.mx-article-fallback-image.html');
 
 
 describe('ElUniversal', () => {
@@ -59,9 +60,29 @@ describe('ElUniversal', () => {
 
           scrapperUtil.getImages(constants.source.eluniversal.code, news)
             .then((response) => {
-
               expect(response.length).to.equal(2);
-              expect(response[0]).to.have.all.keys('title', 'image');
+              expect(response[0]).to.have.all.keys('title', 'image', 'description');
+              done();
+            });
+        });
+      });
+
+    });
+
+    describe('scrapperUtil.getSource returns valid response', () => {
+
+      afterEach(() => {
+        scrapperUtil.getSource.restore();
+      });
+
+      it('extracts news when valid html source is passed including image fallback', (done) => {
+        fs.readFile(fileArticleFallbackImagePath, 'utf8', (err, data) => {
+          sinon.stub(scrapperUtil, 'getSource').callsFake(() => Promise.resolve(data));
+
+          scrapperUtil.getImages(constants.source.eluniversal.code, news)
+            .then((response) => {
+              expect(response.length).to.equal(2);
+              expect(response[0]).to.have.all.keys('title', 'image', 'description');
               done();
             });
         });

@@ -18,7 +18,7 @@ export default {
     },
     eluniversal: {
       code: 'eluniversal',
-      url: 'http://www.eluniversal.com.mx/',
+      url: 'http://www.eluniversal.com.mx',
       status: true,
     },
   },
