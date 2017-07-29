@@ -9,7 +9,8 @@
     "scrapper": "node --use_strict build/main.js",
     "test": "npm run lint && npm run unittest",
     "unittest": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js",
-    "lint": "./node_modules/.bin/eslint ."
+    "lint": "./node_modules/.bin/eslint .",
+    "deploy": "git checkout master && git pull origin develop && git push upstream HEAD"
   },
   "repository": {},
   "license": "MIT",

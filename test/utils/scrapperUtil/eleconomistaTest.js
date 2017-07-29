@@ -10,7 +10,7 @@ import constants from '../../../src/constants';
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 const filePath = path.join(__dirname, '../../stub/eleconomista.com.mx.html');
-const fileImagePath = path.join(__dirname, '../../stub/eleconomista.com.mx-article.html');
+const fileArticlePath = path.join(__dirname, '../../stub/eleconomista.com.mx-article.html');
 
 
 describe('ElEconomista', () => {
@@ -53,13 +53,13 @@ describe('ElEconomista', () => {
       });
 
       it('extracts news when valid html source is passed', (done) => {
-        fs.readFile(fileImagePath, 'utf8', (err, data) => {
+        fs.readFile(fileArticlePath, 'utf8', (err, data) => {
           sinon.stub(scrapperUtil, 'getSource').callsFake(() => Promise.resolve(data));
 
           scrapperUtil.getImages(constants.source.eleconomista.code, news)
             .then((response) => {
               expect(response.length).to.equal(2);
-              expect(response[0]).to.have.all.keys('title', 'image');
+              expect(response[0]).to.have.all.keys('title', 'image', 'description');
               done();
             });
         });

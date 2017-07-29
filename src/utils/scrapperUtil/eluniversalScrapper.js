@@ -30,20 +30,35 @@ export default class ElUniversal {
 
   static extractImage(htmlString) {
     let image = '';
+    const description = [];
     const jQuery = cheerio.load(htmlString);
 
     jQuery('#apertura .field-name-field-image img').filter((index, element) => {
       image = jQuery(element).data('src');
     });
 
-    return image;
+    if (!image) {
+      image = [constants.source.eluniversal.url, jQuery('#apertura .field-type-text-with-summary img').first().attr('src')].join('');
+    }
+
+    jQuery('#apertura .field-type-text-with-summary p').filter((index, element) => {
+      description.push(jQuery(element).text());
+    });
+
+    return {
+      image,
+      description,
+    };
   }
 
   static processImages(news, results) {
-    const images = results.map(this.extractImage);
+    const data = results.map(this.extractImage);
+
     news.forEach((item, index) => {
-      item.image = images[index];
+      item.image = data[index].image;
+      item.description = data[index].description;
     });
+
     return news;
   }
 }

@@ -37,6 +37,7 @@ export default class ElEconomista {
 
   static extractImage(htmlString) {
     let image = '';
+    const description = [];
     const jQuery = cheerio.load(htmlString);
     const { url } = constants.source.eleconomista;
 
@@ -44,13 +45,21 @@ export default class ElEconomista {
       image = `${url}${jQuery(element).attr('src')}`;
     });
 
-    return image;
+    jQuery('#no #nt p').filter((index, element) => {
+      description.push(jQuery(element).text());
+    });
+
+    return {
+      image,
+      description,
+    };
   }
 
   static processImages(news, results) {
-    const images = results.map(this.extractImage);
+    const data = results.map(this.extractImage);
     news.forEach((item, index) => {
-      item.image = images[index];
+      item.image = data[index].image;
+      item.description = data[index].description;
     });
     return news;
   }
