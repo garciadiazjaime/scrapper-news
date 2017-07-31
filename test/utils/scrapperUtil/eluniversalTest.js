@@ -11,7 +11,8 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 const filePath = path.join(__dirname, '../../stub/eluniversal.com.mx.html');
 const fileArticlePath = path.join(__dirname, '../../stub/eluniversal.com.mx-article.html');
-const fileArticleFallbackImagePath = path.join(__dirname, '../../stub/eluniversal.com.mx-article-fallback-image.html');
+const fileArticleVer2 = path.join(__dirname, '../../stub/eluniversal.com.mx-article-ver2.html');
+const fileArticleVer3 = path.join(__dirname, '../../stub/eluniversal.com.mx-article-ver3.html');
 
 
 describe('ElUniversal', () => {
@@ -75,12 +76,34 @@ describe('ElUniversal', () => {
         scrapperUtil.getSource.restore();
       });
 
-      it('extracts news when valid html source is passed including image fallback', (done) => {
-        fs.readFile(fileArticleFallbackImagePath, 'utf8', (err, data) => {
+      it('extracts news when valid html (ver2) source is passed', (done) => {
+        fs.readFile(fileArticleVer2, 'utf8', (err, data) => {
           sinon.stub(scrapperUtil, 'getSource').callsFake(() => Promise.resolve(data));
 
           scrapperUtil.getImages(constants.source.eluniversal.code, news)
             .then((response) => {
+              expect(response.length).to.equal(2);
+              expect(response[0]).to.have.all.keys('title', 'image', 'description');
+              done();
+            });
+        });
+      });
+
+    });
+
+    describe('scrapperUtil.getSource returns valid response', () => {
+
+      afterEach(() => {
+        scrapperUtil.getSource.restore();
+      });
+
+      it('extracts news when valid html (ver3) source is passed ', (done) => {
+        fs.readFile(fileArticleVer3, 'utf8', (err, data) => {
+          sinon.stub(scrapperUtil, 'getSource').callsFake(() => Promise.resolve(data));
+
+          scrapperUtil.getImages(constants.source.eluniversal.code, news)
+            .then((response) => {
+
               expect(response.length).to.equal(2);
               expect(response[0]).to.have.all.keys('title', 'image', 'description');
               done();
