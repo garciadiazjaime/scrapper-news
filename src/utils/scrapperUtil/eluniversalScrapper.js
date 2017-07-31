@@ -38,7 +38,14 @@ export default class ElUniversal {
     });
 
     if (!image) {
-      image = [constants.source.eluniversal.url, jQuery('#apertura .field-type-text-with-summary img').first().attr('src')].join('');
+      image = jQuery('#apertura .field-type-text-with-summary img').first().attr('src');
+      if (image) {
+        image = [constants.source.eluniversal.url, image].join('');
+      }
+    }
+
+    if(!image) {
+      image = jQuery('.view-galeria-js .carousel-big .views-row img').first().data('src');
     }
 
     jQuery('#apertura .field-type-text-with-summary p').filter((index, element) => {
