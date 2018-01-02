@@ -1,4 +1,0 @@
-#! /bin/bash
-
-cd ${OPENSHIFT_REPO_DIR}
-npm run scrapper

@@ -11,13 +11,13 @@ const config = convict({
   ipaddress: {
     doc: 'The IP address to bind.',
     format: 'ipaddress',
-    default: '127.0.0.1',
+    default: '0.0.0.0',
     env: 'NODE_IP',
   },
   port: {
     doc: 'The port to bind.',
     format: 'port',
-    default: 3000,
+    default: 3060,
     env: 'NODE_PORT',
   },
   dataFolder: {
@@ -30,8 +30,8 @@ const config = convict({
     url: {
       doc: 'API URL',
       format: String,
-      default: 'http://127.0.0.1:3000/',
-      env: 'NEWS_API_URL',
+      default: 'http://127.0.0.1:3030/',
+      env: 'API_URL',
     },
   },
 });

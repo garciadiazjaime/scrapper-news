@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "main": "start.js",
   "scripts": {
-    "start": "node --use_strict start.js",
+    "start": "node --use_strict build/main.js",
     "build": "./node_modules/babel-cli/bin/babel.js src -d build",
-    "postinstall": "postinstall-build build",
     "scrapper": "node --use_strict build/main.js",
     "test": "npm run lint && npm run unittest",
     "unittest": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js",
     "lint": "./node_modules/.bin/eslint .",
-    "deploy": "git checkout master && git pull origin develop && git push upstream HEAD"
+    "docker:build": "yarn build && docker build -t garciadiazjaime/scrapper-news .",
+    "docker:run": "docker run -d -p 49194:3060 --link mongo -e='DB_URL=mongodb://mongo/news' --name=scrapper-news garciadiazjaime/scrapper-news",
+    "docker:push": "docker push garciadiazjaime/scrapper-news",
+    "docker:pull": "docker pull garciadiazjaime/scrapper-news"
   },
   "repository": {},
   "license": "MIT",
@@ -18,7 +20,6 @@
     "cheerio": "^1.0.0-rc.2",
     "convict": "^4.0.0",
     "express": "^4.15.3",
-    "postinstall-build": "^5.0.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },
