@@ -17,11 +17,11 @@ export default class AristeguiNoticiasScrapper {
     jQuery('.img_principal .imgTML').filter((index, element) => {
       const title = jQuery(element).find('.title_content2 span').text();
       const image = jQuery(element).find('img').data('cfsrc');
-      const link = jQuery(element).find('a').attr('href');
+      const url = jQuery(element).find('a').attr('href');
       const item = {
         title,
         image,
-        link,
+        url,
         source: code,
       };
       return data.push(item);

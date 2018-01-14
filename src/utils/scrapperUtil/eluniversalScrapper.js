@@ -16,10 +16,10 @@ export default class ElUniversal {
 
     jQuery('.view-home h2.field-content').filter((index, element) => {
       const title = jQuery(element).find('a').text();
-      const link = `${url}${jQuery(element).find('a').attr('href')}`;
+      const url = `${url}${jQuery(element).find('a').attr('href')}`;
       const item = {
         title,
-        link,
+        url,
         source: code,
       };
       data.push(item);

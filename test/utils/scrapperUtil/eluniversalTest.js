@@ -25,7 +25,7 @@ describe('ElUniversal', () => {
 
         expect(err).to.equal(null);
         expect(news.length).to.equal(14);
-        expect(news[0]).to.have.all.keys('title', 'link', 'source');
+        expect(news[0]).to.have.all.keys('title', 'url', 'source');
         done();
       });
     });

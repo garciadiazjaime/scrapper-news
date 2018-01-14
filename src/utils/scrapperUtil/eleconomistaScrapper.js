@@ -22,10 +22,10 @@ export default class ElEconomista {
     inspectors.forEach((inspector) => {
       jQuery(inspector).filter((index, element) => {
         const title = jQuery(element).text();
-        const link = `${url}${jQuery(element).attr('href')}`;
+        const url = `${url}${jQuery(element).attr('href')}`;
         const item = {
           title,
-          link,
+          url,
           source: code,
         };
         data.push(item);

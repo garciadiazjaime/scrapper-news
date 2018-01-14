@@ -17,12 +17,12 @@ export default class Proceso {
 
     jQuery('.main-featured .slider li').filter((index, element) => {
       const title = jQuery(element).find('.caption a').text();
-      const link = jQuery(element).find('.caption a').attr('href');
+      const url = jQuery(element).find('.caption a').attr('href');
       const image = jQuery(element).find('img').data('cfsrc');
 
       const item = {
         title,
-        link: `http:${link}`,
+        url: `http:${url}`,
         image: removeDimentionFromImage(image),
         source: code,
       };
@@ -31,12 +31,12 @@ export default class Proceso {
 
     jQuery('.main-featured .blocks article').filter((index, element) => {
       const title = jQuery(element).find('h3 a').text();
-      const link = jQuery(element).find('h3 a').attr('href');
+      const url = jQuery(element).find('h3 a').attr('href');
       const image = jQuery(element).find('img').data('cfsrc');
 
       const item = {
         title,
-        link: `http:${link}`,
+        url: `http:${url}`,
         image: removeDimentionFromImage(image),
         source: code,
       };

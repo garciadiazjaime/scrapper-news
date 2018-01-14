@@ -12,7 +12,7 @@ sources.forEach((source) => {
     ScrapperUtil.getSource(url)
       .then(response => ScrapperUtil.extractNews(code, response))
       .then(news => ScrapperUtil.getImages(code, news))
-      .then(news => ScrapperUtil.postNews(`${config.get('api.url')}api/news`, news))
+      .then(news => ScrapperUtil.postNews(`${config.get('api.url')}news`, news))
       .then(() => {
         console.log(`successfully scrapped: ${url}`);
       })

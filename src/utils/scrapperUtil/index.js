@@ -69,19 +69,19 @@ export default class ScrapperUtil {
   static getImages(sourceCode, news) {
     switch (sourceCode) {
       case constants.source.eleconomista.code:
-        return Promise.all(news.map(item => this.getSource(item.link)))
+        return Promise.all(news.map(item => this.getSource(item.url)))
           .then(results => ElEconomistaScrapper.processImages(news, results))
           .catch(() => news);
       case constants.source.eluniversal.code:
-        return Promise.all(news.map(item => this.getSource(item.link)))
+        return Promise.all(news.map(item => this.getSource(item.url)))
           .then(results => ElUniversal.processImages(news, results))
           .catch(() => news);
       case constants.source.aristeguinoticias.code:
-        return Promise.all(news.map(item => this.getSource(item.link)))
+        return Promise.all(news.map(item => this.getSource(item.url)))
           .then(results => AristeguiNoticiasScrapper.getArticle(news, results))
           .catch(() => news);
       case constants.source.proceso.code:
-        return Promise.all(news.map(item => this.getSource(item.link)))
+        return Promise.all(news.map(item => this.getSource(item.url)))
           .then(results => ProcesoScrapper.getArticle(news, results))
           .catch(() => news);
     }
