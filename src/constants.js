@@ -9,17 +9,17 @@ export default {
     eleconomista: {
       code: 'eleconomista',
       url: 'http://eleconomista.com.mx',
-      status: true,
+      status: false,
     },
     proceso: {
       code: 'proceso',
       url: 'http://www.proceso.com.mx/',
-      status: true,
+      status: false,
     },
     eluniversal: {
       code: 'eluniversal',
       url: 'http://www.eluniversal.com.mx',
-      status: true,
+      status: false,
     },
   },
 };

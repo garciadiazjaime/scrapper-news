@@ -16,7 +16,7 @@ export default class AristeguiNoticiasScrapper {
 
     jQuery('.img_principal .imgTML').filter((index, element) => {
       const title = jQuery(element).find('.title_content2 span').text();
-      const image = jQuery(element).find('img').data('cfsrc');
+      const image = jQuery(element).find('img').attr('src');
       const url = jQuery(element).find('a').attr('href');
       const item = {
         title,
