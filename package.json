@@ -22,8 +22,7 @@
     "express": "^4.15.3",
     "natural": "^0.6.2",
     "request": "^2.81.0",
-    "request-promise-native": "^1.0.4",
-    "sentiment": "^5.0.1"
+    "request-promise-native": "^1.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
