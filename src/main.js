@@ -13,8 +13,9 @@ sources.forEach((source) => {
       .then(response => ScrapperUtil.extractNews(code, response))
       .then(news => ScrapperUtil.getArticles(code, news))
       .then(news => ScrapperUtil.postNews(`${config.get('api.url')}news`, news))
-      .then(() => {
+      .then((results) => {
         console.log(`successfully scrapped: ${url}`);
+        console.log(results);
       })
       .catch((error) => {
         console.log(`error while scrapping: ${url}`);
