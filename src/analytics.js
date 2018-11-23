@@ -15,20 +15,21 @@ const shortWords = [
   'tambien',
   'entre',
   'pues',
+  'esta',
 ];
 
 function cleanText(str) {
   return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s]/gi, ' ').toLowerCase();
 }
 
-function getWordsCounted(data) {
+function getWordsFrequency(data) {
   const words = data.split(' ');
-  const wordsCount = words.reduce((accumulator, word) => {
+  const wordsFrequency = words.reduce((accumulator, word) => {
     accumulator[word] = (accumulator[word] || 0) + 1;
     return accumulator;
   }, {});
 
-  const sortedList = Object.entries(wordsCount)
+  const sortedList = Object.entries(wordsFrequency)
     .sort((a, b) => b[1] - a[1])
     .filter(row => row[1] > 2 && row[0].length > 3 && !shortWords.includes(row[0]))
     .slice(0, 12);
@@ -49,13 +50,14 @@ function getAnalysis(news) {
   const analysis = news.map((item) => {
     const text = cleanText(`${item.description.join(' ')} ${item.title}`);
     const sentiment = analyzer.getSentiment(text.split(' '));
-    const wordsCount = getWordsCounted(text);
+    const wordsFrequency = getWordsFrequency(text);
 
     const review = {
       newsId: item._id,
-      tmp: item.title,
+      title: item.title,
+      url: item.url,
       sentiment,
-      wordsCount,
+      wordsFrequency,
     };
 
     return review;
@@ -64,11 +66,25 @@ function getAnalysis(news) {
   return analysis;
 }
 
-async function main() {
-  const news = await getNews(config.get('api.url'));
-  const analysis = getAnalysis(news);
+function saveAnalysis(apiURL, data) {
+  const options = {
+    method: 'POST',
+    uri: `${apiURL}analysis`,
+    body: {
+      data,
+    },
+    json: true,
+  };
+  return request(options);
+}
 
-  console.log('analysis', JSON.stringify(analysis, null, 1));
+async function main() {
+  const apiURL = config.get('api.url');
+  const news = await getNews(apiURL);
+  const analysis = getAnalysis(news);
+  const results = await saveAnalysis(apiURL, analysis);
+
+  console.log('analysis saved', JSON.stringify(results, null, 1));
 }
 
 main();
