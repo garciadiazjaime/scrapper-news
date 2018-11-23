@@ -34,7 +34,12 @@ function getWordsFrequency(data) {
     .filter(row => row[1] > 2 && row[0].length > 3 && !shortWords.includes(row[0]))
     .slice(0, 12);
 
-  return sortedList;
+  const filterWordsFrequency = sortedList.map(([word, frequency]) => ({
+    word,
+    frequency,
+  }));
+
+  return filterWordsFrequency;
 }
 
 async function getNews(apiUrl) {
