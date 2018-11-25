@@ -1,10 +1,60 @@
-const request = require('request');
+const request = require('request-promise-native');
 const util = require('util');
 const querystring = require('querystring');
 const cheerio = require('cheerio');
+const debug = require('debug')('google-search');
 
-function main() {
-  const query = 'woodward hombres washington';
+const config = require('./config');
+
+async function getAnalysis(apiUrl) {
+  const url = `${apiUrl}analysis?query={analysis(state:"without-google-search"){_id,wordsFrequency{word,frequency},newsId,sentiment}}`;
+  const { data: { analysis = [] } = {} } = await request(url, {
+    json: true,
+  });
+
+  return analysis;
+}
+
+function getResults(body) {
+  const itemSel = '#search div.g';
+  const linkSel = 'h3.r a';
+  const descSel = 'div.s span.st';
+
+  const $ = cheerio.load(body);
+  const items = [];
+
+  $(itemSel).each((index, element) => {
+    const linkElement = $(element).find(linkSel);
+    const descElement = $(element).find(descSel);
+    const qsObj = querystring.parse($(linkElement).attr('href'));
+
+    if ($(descElement).text()) {
+      items.push({
+        title: $(linkElement).text(),
+        description: $(descElement).text(),
+        link: qsObj['/url?q'],
+      });
+    }
+  });
+
+  return items;
+}
+
+function getQuery(analysis = []) {
+  return analysis.slice(0, 3).map(({ word }) => word).join(' ');
+}
+
+let FLAG = false;
+async function doGoogleSearch(query) {
+  if (FLAG) {
+    return null;
+  }
+  FLAG = true;
+  if (!query) {
+    debug('skiping google search');
+    return null;
+  }
+  debug(`google search: ${query}`);
   const URL = '%s://www.google.%s/search?hl=%s&q=%s&start=%s&sa=N&num=%s&ie=UTF-8&oe=UTF-8&gws_rd=ssl';
   const source = {
     protocol: 'https',
@@ -26,34 +76,57 @@ function main() {
     method: 'GET',
   };
 
-  const itemSel = '#search div.g';
-  const linkSel = 'h3.r a';
-  const descSel = 'div.s span.st';
+  const body = await request(options);
+  const results = getResults(body);
+  return results;
+}
 
-  request(options, (err, resp, body) => {
-    if (err != null || resp.statusCode !== 200) {
-      return null;
-    }
+async function saveResults(apiURL, analysisId, data = []) {
+  if (!apiURL || !data || !data.length) {
+    debug(`omiting saving results for analysis ${analysisId}`);
+    return null;
+  }
 
-    const $ = cheerio.load(body);
-    const items = [];
+  debug(`saving ${data.length} results for analysis ${analysisId}`);
+  const options = {
+    method: 'POST',
+    uri: `${apiURL}google-results`,
+    body: {
+      analysisId,
+      data,
+    },
+    json: true,
+  };
 
-    $(itemSel).each((index, element) => {
-      const linkElement = $(element).find(linkSel);
-      const descElement = $(element).find(descSel);
-      const qsObj = querystring.parse($(linkElement).attr('href'));
+  return request(options);
+}
 
-      if ($(descElement).text()) {
-        items.push({
-          title: $(linkElement).text(),
-          description: $(descElement).text(),
-          link: qsObj['/url?q'],
-        });
-      }
-    });
+async function runGoogleQueries(apiURL, analysisList = [], timeout = 1000) {
+  const analysis = analysisList[0];
 
-    console.log(items);
-  });
+  if (!analysis) {
+    debug(`finish ${new Date()}`);
+    return null;
+  }
+
+  const query = getQuery(analysis.wordsFrequency);
+  const results = await doGoogleSearch(query);
+
+  await saveResults(apiURL, analysis._id, results); //eslint-disable-line
+
+  setTimeout(() => {
+    runGoogleQueries(apiURL, analysisList.slice(1));
+  }, timeout);
+
+  return null;
+}
+
+async function main() {
+  const apiURL = config.get('api.url');
+  const analysis = await getAnalysis(apiURL);
+  debug(`staring ${new Date()}`);
+  debug(`${analysis.length} queries to run`);
+  runGoogleQueries(apiURL, analysis);
 }
 
 main();

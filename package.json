@@ -12,13 +12,16 @@
     "docker:build": "yarn build && docker build -t garciadiazjaime/scrapper-news .",
     "docker:run": "docker run -d -p 49194:3060 --link mongo -e='DB_URL=mongodb://mongo/news' --name=scrapper-news garciadiazjaime/scrapper-news",
     "docker:push": "docker push garciadiazjaime/scrapper-news",
-    "docker:pull": "docker pull garciadiazjaime/scrapper-news"
+    "docker:pull": "docker pull garciadiazjaime/scrapper-news",
+    "util:google-search": "DEBUG=* node ./src/google-search.js",
+    "util:analysis": "node src/analytics.js"
   },
   "repository": {},
   "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "convict": "^4.0.0",
+    "debug": "^4.1.0",
     "express": "^4.15.3",
     "natural": "^0.6.2",
     "query-string": "^6.2.0",
