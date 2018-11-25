@@ -96,7 +96,7 @@ export default class ScrapperUtil {
     switch (sourceCode) {
       case constants.source.eleconomista.code:
         return Promise.all(news.map(item => this.getSource(item.url)))
-          .then(results => ElEconomistaScrapper.processImages(news, results))
+          .then(results => ElEconomistaScrapper.getArticle(news, results))
           .catch(() => news);
       case constants.source.eluniversal.code:
         return Promise.all(news.map(item => this.getSource(item.url)))

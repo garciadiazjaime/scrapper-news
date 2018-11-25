@@ -2,6 +2,10 @@ import cheerio from 'cheerio';
 
 import constants from '../../constants';
 
+const invalidText = [
+  'Archivado en:',
+  '[email protected]'
+]
 
 // Utility to scrap specific source
 export default class ElEconomista {
@@ -12,17 +16,19 @@ export default class ElEconomista {
   static extractNews(htmlString) {
     const data = [];
     const jQuery = cheerio.load(htmlString);
-    const { code, url } = constants.source.eleconomista;
+    const { code, url: sourceUrl } = constants.source.eleconomista;
 
     const inspectors = [
-      '#front_central .view-display-id-block_2 .views-row-first .views-field-title a',
-      '#front_central #front_izquierda .views-field-title a'
+      'div.pb article[itemtype="http://schema.org/Article"]',
     ];
 
     inspectors.forEach((inspector) => {
       jQuery(inspector).filter((index, element) => {
-        const title = jQuery(element).text();
-        const url = `${url}${jQuery(element).attr('href')}`;
+        const titleElement = jQuery(element).find('div.entry-data h2 a').length ?
+          jQuery(element).find('div.entry-data h2 a') :
+          jQuery(element).find('a.cover-link')
+        const title = jQuery(titleElement).attr('title');
+        const url = `${sourceUrl}${jQuery(titleElement).attr('href')}`;
         const item = {
           title,
           url,
@@ -59,6 +65,36 @@ export default class ElEconomista {
     const data = results.map(this.extractImage);
     news.forEach((item, index) => {
       item.image = data[index].image;
+      item.description = data[index].description;
+    });
+    return news;
+  }
+
+  static extractArticle(htmlString) {
+    const description = [];
+    const jQuery = cheerio.load(htmlString);
+
+    jQuery('section.main-content div.entry-body p').filter((index, element) => {
+      const text = jQuery(element).text().replace(/[\t\n]+/g,'').trim()
+      if (text && text.length && !invalidText.includes(text)) {
+        description.push(text);
+      }
+    });
+
+    if (!description.length) {
+      jQuery('div.content-gallery div.entry-top p').filter((index, element) => {
+        description.push(jQuery(element).text());
+      });
+    }
+
+    return {
+      description,
+    };
+  }
+
+  static getArticle(news, results) {
+    const data = results.map(this.extractArticle);
+    news.forEach((item, index) => {
       item.description = data[index].description;
     });
     return news;

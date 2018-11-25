@@ -4,12 +4,12 @@ export default {
     aristeguinoticias: {
       code: 'aristeguinoticias',
       url: 'http://aristeguinoticias.com/',
-      status: true,
+      status: false,
     },
     eleconomista: {
       code: 'eleconomista',
       url: 'http://eleconomista.com.mx',
-      status: false,
+      status: true,
     },
     proceso: {
       code: 'proceso',
