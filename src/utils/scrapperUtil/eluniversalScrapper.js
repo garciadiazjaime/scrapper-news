@@ -12,11 +12,11 @@ export default class ElUniversal {
   static extractNews(htmlString) {
     const data = [];
     const jQuery = cheerio.load(htmlString);
-    const { code, url } = constants.source.eluniversal;
+    const { code, url: sourceUrl } = constants.source.eluniversal;
 
-    jQuery('.view-home h2.field-content').filter((index, element) => {
-      const title = jQuery(element).find('a').text();
-      const url = `${url}${jQuery(element).find('a').attr('href')}`;
+    jQuery('div.view-home div.views-row h1 a, div.view-home div.views-row h3 a').filter((index, element) => {
+      const title = jQuery(element).text();
+      const url = `${sourceUrl}${jQuery(element).attr('href')}`;
       const item = {
         title,
         url,
@@ -63,6 +63,30 @@ export default class ElUniversal {
 
     news.forEach((item, index) => {
       item.image = data[index].image;
+      item.description = data[index].description;
+    });
+
+    return news;
+  }
+
+  static extractArticle(htmlString) {
+    const description = [];
+    const jQuery = cheerio.load(htmlString);
+
+    jQuery('div#apertura div.pane-content p').filter((index, element) => {
+      if (jQuery(element).text()) {
+        description.push(jQuery(element).text());
+      }
+    });
+
+    return {
+      description,
+    };
+  }
+
+  static getArticle(news, results) {
+    const data = results.map(this.extractArticle);
+    news.forEach((item, index) => {
       item.description = data[index].description;
     });
 

@@ -100,7 +100,7 @@ export default class ScrapperUtil {
           .catch(() => news);
       case constants.source.eluniversal.code:
         return Promise.all(news.map(item => this.getSource(item.url)))
-          .then(results => ElUniversal.processImages(news, results))
+          .then(results => ElUniversal.getArticle(news, results))
           .catch(() => news);
       case constants.source.aristeguinoticias.code:
         return Promise.all(news.map(item => this.getSource(item.url)))
