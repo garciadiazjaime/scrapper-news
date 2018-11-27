@@ -9,12 +9,12 @@ export default {
     eleconomista: {
       code: 'eleconomista',
       url: 'http://eleconomista.com.mx',
-      status: true,
+      status: false,
     },
     proceso: {
       code: 'proceso',
       url: 'http://www.proceso.com.mx/',
-      status: false,
+      status: true,
     },
     eluniversal: {
       code: 'eluniversal',
