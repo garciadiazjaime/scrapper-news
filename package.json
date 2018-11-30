@@ -9,7 +9,7 @@
     "test": "npm run lint && npm run unittest",
     "unittest": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js",
     "lint": "./node_modules/.bin/eslint .",
-    "docker:build": "npm run build && docker build -t garciadiazjaime/scrapper-news .",
+    "docker:build": "docker build -t garciadiazjaime/scrapper-news .",
     "docker:run": "docker run -d -p 49194:3060 --link mongo -e='DB_URL=mongodb://mongo/news' --name=scrapper-news garciadiazjaime/scrapper-news",
     "docker:push": "docker push garciadiazjaime/scrapper-news",
     "docker:pull": "docker pull garciadiazjaime/scrapper-news",

@@ -7,7 +7,7 @@ const debug = require('debug')('google-search');
 const config = require('./config');
 
 async function getAnalysis(apiUrl) {
-  const url = `${apiUrl}analysis?query={analysis(state:"without-google-search",limit:10){_id,wordsFrequency{word,frequency},newsId,sentiment}}`;
+  const url = `${apiUrl}analysis?query={analysis(state:"without-google-search",limit:6){_id,wordsFrequency{word,frequency},newsId,sentiment}}`;
   const { data: { analysis = [] } = {} } = await request(url, {
     json: true,
   });
@@ -44,12 +44,7 @@ function getQuery(analysis = []) {
   return analysis.slice(0, 3).map(({ word }) => word).join(' ');
 }
 
-let FLAG = false;
 async function doGoogleSearch(query) {
-  if (FLAG) {
-    return null;
-  }
-  FLAG = true;
   if (!query) {
     debug('skiping google search');
     return null;
