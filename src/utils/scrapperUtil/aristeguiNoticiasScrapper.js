@@ -33,14 +33,14 @@ class AristeguiNoticiasScrapper {
     const description = [];
     const jQuery = cheerio.load(htmlString);
 
-    jQuery('section.main-content .entry-body p').filter((index, element) => {
+    jQuery('div.container_left div.class_text p').filter((index, element) => {
       if (jQuery(element).text()) {
         description.push(jQuery(element).text());
       }
     });
 
     if (!description.length) {
-      jQuery('div.entry-top h3 p').filter((index, element) => {
+      jQuery('div.container_left div.class_text2').filter((index, element) => {
         description.push(jQuery(element).text());
       });
     }
