@@ -7,7 +7,7 @@ const debug = require('debug')('google-search');
 const config = require('./config');
 
 async function getAnalysis(apiUrl) {
-  const url = `${apiUrl}analysis?query={analysis(state:"without-google-search"){_id,wordsFrequency{word,frequency},newsId,sentiment}}`;
+  const url = `${apiUrl}analysis?query={analysis(state:"without-google-search",limit:10){_id,wordsFrequency{word,frequency},newsId,sentiment}}`;
   const { data: { analysis = [] } = {} } = await request(url, {
     json: true,
   });
@@ -121,7 +121,7 @@ async function runGoogleQueries(apiURL, analysisList = [], timeout = 1000) {
   return null;
 }
 
-async function main() {
+async function runGoogleSearch() {
   const apiURL = config.get('api.url');
   const analysis = await getAnalysis(apiURL);
   debug(`staring ${new Date()}`);
@@ -129,4 +129,4 @@ async function main() {
   runGoogleQueries(apiURL, analysis);
 }
 
-main();
+module.exports = runGoogleSearch;

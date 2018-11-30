@@ -2,6 +2,8 @@ const request = require('request-promise-native');
 const Analyzer = require('natural').SentimentAnalyzer;
 const stemmer = require('natural').PorterStemmer;
 
+const debug = require('debug')('analytics');
+
 const config = require('./config');
 
 const analyzer = new Analyzer('Spanish', stemmer, 'afinn');
@@ -83,13 +85,13 @@ function saveAnalysis(apiURL, data) {
   return request(options);
 }
 
-async function main() {
+async function runAnalytics() {
   const apiURL = config.get('api.url');
   const news = await getNews(apiURL);
   const analysis = getAnalysis(news);
   const results = await saveAnalysis(apiURL, analysis);
 
-  console.log('analysis saved', JSON.stringify(results, null, 1));
+  debug('analysis saved', JSON.stringify(results, null, 1));
 }
 
-main();
+module.exports = runAnalytics;

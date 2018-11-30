@@ -34,6 +34,12 @@ const config = convict({
       env: 'API_URL',
     },
   },
+  task: {
+    doc: 'task to perform',
+    format: String,
+    default: '',
+    env: 'TASK',
+  },
 });
 
 // Perform validation

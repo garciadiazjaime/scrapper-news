@@ -1,10 +1,10 @@
-import cheerio from 'cheerio';
+const cheerio = require('cheerio');
 
-import constants from '../../constants';
+const constants = require('../../constants');
 
 
 // Utility to scrap specific source
-export default class ElUniversal {
+class ElUniversal {
 
   // based on html passed (source code) news are extracted
   // @param {string} htmlString - html source page
@@ -93,3 +93,5 @@ export default class ElUniversal {
     return news;
   }
 }
+
+module.exports = ElUniversal

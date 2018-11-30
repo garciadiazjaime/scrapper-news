@@ -1,15 +1,15 @@
-import request from 'request-promise-native';
-import { isEmpty, isArray } from 'lodash';
+const request = require('request-promise-native');
+const { isEmpty, isArray } = require('lodash');
 
-import AristeguiNoticiasScrapper from './aristeguiNoticiasScrapper';
-import ElEconomistaScrapper from './eleconomistaScrapper';
-import ProcesoScrapper from './procesoScrapper';
-import ElUniversal from './eluniversalScrapper';
-import constants from '../../constants';
+const AristeguiNoticiasScrapper = require('./aristeguiNoticiasScrapper');
+const ElEconomistaScrapper = require('./eleconomistaScrapper');
+const ProcesoScrapper = require('./procesoScrapper');
+const ElUniversal = require('./eluniversalScrapper');
+const constants = require('../../constants');
 
 
 // Utility to scrap websites
-export default class ScrapperUtil {
+class ScrapperUtil {
 
   // based on url sent function will do a request to get source page
   // @param {string} url
@@ -114,3 +114,5 @@ export default class ScrapperUtil {
     return Promise.resolve(news);
   }
 }
+
+module.exports = ScrapperUtil

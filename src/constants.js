@@ -1,10 +1,10 @@
 
-export default {
+module.exports = {
   source: {
     aristeguinoticias: {
       code: 'aristeguinoticias',
       url: 'http://aristeguinoticias.com/',
-      status: false,
+      status: true,
     },
     eleconomista: {
       code: 'eleconomista',
@@ -19,7 +19,7 @@ export default {
     eluniversal: {
       code: 'eluniversal',
       url: 'http://www.eluniversal.com.mx',
-      status: true,
+      status: false,
     },
   },
 };

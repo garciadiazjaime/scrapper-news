@@ -1,6 +1,6 @@
-import cheerio from 'cheerio';
+const cheerio = require('cheerio');
 
-import constants from '../../constants';
+const constants = require('../../constants');
 
 const invalidText = [
   'Archivado en:',
@@ -8,7 +8,7 @@ const invalidText = [
 ]
 
 // Utility to scrap specific source
-export default class ElEconomista {
+class ElEconomista {
 
   // based on html passed (source code) news are extracted
   // @param {string} htmlString - html source page
@@ -100,3 +100,5 @@ export default class ElEconomista {
     return news;
   }
 }
+
+module.exports = ElEconomista
