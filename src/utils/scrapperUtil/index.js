@@ -1,6 +1,8 @@
 const request = require('request-promise-native');
 const { isEmpty, isArray } = require('lodash');
 
+const debug = require('debug')('scrapperUtil');
+
 const AristeguiNoticiasScrapper = require('./aristeguiNoticiasScrapper');
 const ElEconomistaScrapper = require('./eleconomistaScrapper');
 const ProcesoScrapper = require('./procesoScrapper');
@@ -30,6 +32,7 @@ class ScrapperUtil {
   // @param {string} htmlString - news source page (html)
   // @return {array|false} - either returns array with news extracted or false
   static extractNews(sourceCode, htmlString) {
+    debug(`extracting news for ${sourceCode}...`)
     switch (sourceCode) {
       case constants.source.aristeguinoticias.code:
         return AristeguiNoticiasScrapper.extractNews(htmlString);
@@ -93,6 +96,7 @@ class ScrapperUtil {
   // @param {array} news
   // @return {promise} - news where items are extended if image is found
   static getArticles(sourceCode, news) {
+    debug(`${news.length} articles to get from ${sourceCode}`)
     switch (sourceCode) {
       case constants.source.aristeguinoticias.code:
         return Promise.all(news.map(item => this.getSource(item.url)))

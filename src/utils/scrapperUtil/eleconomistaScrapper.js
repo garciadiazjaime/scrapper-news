@@ -19,7 +19,7 @@ class ElEconomista {
     const { code, url: sourceUrl } = constants.source.eleconomista;
 
     const inspectors = [
-      'div.pb article[itemtype="http://schema.org/Article"]',
+      'div.pb article[itemtype="http://schema.org/Article"].entry-box',
     ];
 
     inspectors.forEach((inspector) => {
