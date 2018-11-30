@@ -4,7 +4,7 @@ module.exports = {
     aristeguinoticias: {
       code: 'aristeguinoticias',
       url: 'http://aristeguinoticias.com/',
-      status: false,
+      status: true,
     },
     eleconomista: {
       code: 'eleconomista',
@@ -14,12 +14,12 @@ module.exports = {
     proceso: {
       code: 'proceso',
       url: 'http://www.proceso.com.mx/',
-      status: false,
+      status: true,
     },
     eluniversal: {
       code: 'eluniversal',
       url: 'http://www.eluniversal.com.mx',
-      status: false,
+      status: true,
     },
   },
 };
