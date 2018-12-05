@@ -1,10 +1,10 @@
-import cheerio from 'cheerio';
+const cheerio = require('cheerio');
 
-import constants from '../../constants';
+const constants = require('../../constants');
 
 
 // Utility to scrap specific source
-export default class AristeguiNoticiasScrapper {
+class AristeguiNoticiasScrapper {
 
   // based on html passed (source code) news are extracted
   // @param {string} htmlString - html source page
@@ -16,12 +16,12 @@ export default class AristeguiNoticiasScrapper {
 
     jQuery('.img_principal .imgTML').filter((index, element) => {
       const title = jQuery(element).find('.title_content2 span').text();
-      const image = jQuery(element).find('img').data('cfsrc');
-      const link = jQuery(element).find('a').attr('href');
+      const image = jQuery(element).find('img').attr('src');
+      const url = jQuery(element).find('a').attr('href');
       const item = {
         title,
         image,
-        link,
+        url,
         source: code,
       };
       return data.push(item);
@@ -33,14 +33,14 @@ export default class AristeguiNoticiasScrapper {
     const description = [];
     const jQuery = cheerio.load(htmlString);
 
-    jQuery('.class_text p').filter((index, element) => {
+    jQuery('div.container_left div.class_text p').filter((index, element) => {
       if (jQuery(element).text()) {
         description.push(jQuery(element).text());
       }
     });
 
     if (!description.length) {
-      jQuery('.sub_content').filter((index, element) => {
+      jQuery('div.container_left div.class_text2').filter((index, element) => {
         description.push(jQuery(element).text());
       });
     }
@@ -58,3 +58,5 @@ export default class AristeguiNoticiasScrapper {
     return news;
   }
 }
+
+module.exports = AristeguiNoticiasScrapper

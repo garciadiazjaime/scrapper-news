@@ -1,10 +1,10 @@
-import cheerio from 'cheerio';
+const cheerio = require('cheerio');
 
-import constants from '../../constants';
+const constants = require('../../constants');
 
 
 // Utility to scrap specific source
-export default class ElUniversal {
+class ElUniversal {
 
   // based on html passed (source code) news are extracted
   // @param {string} htmlString - html source page
@@ -12,14 +12,14 @@ export default class ElUniversal {
   static extractNews(htmlString) {
     const data = [];
     const jQuery = cheerio.load(htmlString);
-    const { code, url } = constants.source.eluniversal;
+    const { code, url: sourceUrl } = constants.source.eluniversal;
 
-    jQuery('.view-home h2.field-content').filter((index, element) => {
-      const title = jQuery(element).find('a').text();
-      const link = `${url}${jQuery(element).find('a').attr('href')}`;
+    jQuery('div.view-home div.views-row h1 a, div.view-home div.views-row h3 a').filter((index, element) => {
+      const title = jQuery(element).text();
+      const url = `${sourceUrl}${jQuery(element).attr('href')}`;
       const item = {
         title,
-        link,
+        url,
         source: code,
       };
       data.push(item);
@@ -68,4 +68,30 @@ export default class ElUniversal {
 
     return news;
   }
+
+  static extractArticle(htmlString) {
+    const description = [];
+    const jQuery = cheerio.load(htmlString);
+
+    jQuery('div#apertura div.pane-content p').filter((index, element) => {
+      if (jQuery(element).text()) {
+        description.push(jQuery(element).text());
+      }
+    });
+
+    return {
+      description,
+    };
+  }
+
+  static getArticle(news, results) {
+    const data = results.map(this.extractArticle);
+    news.forEach((item, index) => {
+      item.description = data[index].description;
+    });
+
+    return news;
+  }
 }
+
+module.exports = ElUniversal

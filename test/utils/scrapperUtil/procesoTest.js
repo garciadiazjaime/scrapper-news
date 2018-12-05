@@ -23,7 +23,7 @@ describe('ProcesoScrapper', () => {
 
         expect(err).to.equal(null);
         expect(news.length).to.equal(7);
-        expect(news[0]).to.have.all.keys('title', 'link', 'source', 'image');
+        expect(news[0]).to.have.all.keys('title', 'url', 'source', 'image');
         done();
       });
     });

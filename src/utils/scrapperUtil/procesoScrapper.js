@@ -1,11 +1,10 @@
-import cheerio from 'cheerio';
+const cheerio = require('cheerio');
 
-import constants from '../../constants';
+const constants = require('../../constants');
 
-const removeDimentionFromImage = (image) => image ? image.replace(/\-[\d]+x[\d]+\./, '.') : image;
 
 // Utility to scrap specific source
-export default class Proceso {
+class Proceso {
 
   // based on html passed (source code) news are extracted
   // @param {string} htmlString - html source page
@@ -15,29 +14,32 @@ export default class Proceso {
     const jQuery = cheerio.load(htmlString);
     const { code, url } = constants.source.proceso;
 
-    jQuery('.main-featured .slider li').filter((index, element) => {
+    const urlRegex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi
+
+    jQuery('.main-featured ul.slides li').filter((index, element) => {
       const title = jQuery(element).find('.caption a').text();
-      const link = jQuery(element).find('.caption a').attr('href');
-      const image = jQuery(element).find('img').data('cfsrc');
+      const url = jQuery(element).find('.caption a').attr('href');
+      const imageReference = jQuery(element).find('a.image-link') && jQuery(element).find('a.image-link')[0]
+      const image = imageReference && jQuery(imageReference).css('background-image').match(urlRegex)
 
       const item = {
         title,
-        link: `http:${link}`,
-        image: removeDimentionFromImage(image),
+        url,
+        image: image && image.pop(),
         source: code,
       };
       data.push(item);
     });
 
-    jQuery('.main-featured .blocks article').filter((index, element) => {
+    jQuery('div.foreground div.article_item').filter((index, element) => {
       const title = jQuery(element).find('h3 a').text();
-      const link = jQuery(element).find('h3 a').attr('href');
-      const image = jQuery(element).find('img').data('cfsrc');
+      const url = jQuery(element).find('h3 a').attr('href');
+      const image = jQuery(element).find('img').data('src');
 
       const item = {
         title,
-        link: `http:${link}`,
-        image: removeDimentionFromImage(image),
+        url,
+        image,
         source: code,
       };
       data.push(item);
@@ -71,3 +73,5 @@ export default class Proceso {
   }
 
 }
+
+module.exports = Proceso

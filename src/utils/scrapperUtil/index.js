@@ -1,15 +1,17 @@
-import request from 'request-promise-native';
-import { isEmpty, isArray } from 'lodash';
+const request = require('request-promise-native');
+const { isEmpty, isArray } = require('lodash');
 
-import AristeguiNoticiasScrapper from './aristeguiNoticiasScrapper';
-import ElEconomistaScrapper from './eleconomistaScrapper';
-import ProcesoScrapper from './procesoScrapper';
-import ElUniversal from './eluniversalScrapper';
-import constants from '../../constants';
+const debug = require('debug')('scrapperUtil');
+
+const AristeguiNoticiasScrapper = require('./aristeguiNoticiasScrapper');
+const ElEconomistaScrapper = require('./eleconomistaScrapper');
+const ProcesoScrapper = require('./procesoScrapper');
+const ElUniversal = require('./eluniversalScrapper');
+const constants = require('../../constants');
 
 
 // Utility to scrap websites
-export default class ScrapperUtil {
+class ScrapperUtil {
 
   // based on url sent function will do a request to get source page
   // @param {string} url
@@ -30,6 +32,7 @@ export default class ScrapperUtil {
   // @param {string} htmlString - news source page (html)
   // @return {array|false} - either returns array with news extracted or false
   static extractNews(sourceCode, htmlString) {
+    debug(`extracting news for ${sourceCode}...`)
     switch (sourceCode) {
       case constants.source.aristeguinoticias.code:
         return AristeguiNoticiasScrapper.extractNews(htmlString);
@@ -69,22 +72,51 @@ export default class ScrapperUtil {
   static getImages(sourceCode, news) {
     switch (sourceCode) {
       case constants.source.eleconomista.code:
-        return Promise.all(news.map(item => this.getSource(item.link)))
+        return Promise.all(news.map(item => this.getSource(item.url)))
           .then(results => ElEconomistaScrapper.processImages(news, results))
           .catch(() => news);
       case constants.source.eluniversal.code:
-        return Promise.all(news.map(item => this.getSource(item.link)))
+        return Promise.all(news.map(item => this.getSource(item.url)))
           .then(results => ElUniversal.processImages(news, results))
           .catch(() => news);
       case constants.source.aristeguinoticias.code:
-        return Promise.all(news.map(item => this.getSource(item.link)))
+        return Promise.all(news.map(item => this.getSource(item.url)))
           .then(results => AristeguiNoticiasScrapper.getArticle(news, results))
           .catch(() => news);
       case constants.source.proceso.code:
-        return Promise.all(news.map(item => this.getSource(item.link)))
+        return Promise.all(news.map(item => this.getSource(item.url)))
+          .then(results => ProcesoScrapper.getArticle(news, results))
+          .catch(() => news);
+    }
+    return Promise.resolve(news);
+  }
+
+  // get images
+  // @param {string} sourceCode - html page
+  // @param {array} news
+  // @return {promise} - news where items are extended if image is found
+  static getArticles(sourceCode, news) {
+    debug(`${news.length} articles to get from ${sourceCode}`)
+    switch (sourceCode) {
+      case constants.source.aristeguinoticias.code:
+        return Promise.all(news.map(item => this.getSource(item.url)))
+        .then(results => AristeguiNoticiasScrapper.getArticle(news, results))
+        .catch(() => news);
+      case constants.source.eleconomista.code:
+        return Promise.all(news.map(item => this.getSource(item.url)))
+          .then(results => ElEconomistaScrapper.getArticle(news, results))
+          .catch(() => news);
+      case constants.source.eluniversal.code:
+        return Promise.all(news.map(item => this.getSource(item.url)))
+          .then(results => ElUniversal.getArticle(news, results))
+          .catch(() => news);
+      case constants.source.proceso.code:
+        return Promise.all(news.map(item => this.getSource(item.url)))
           .then(results => ProcesoScrapper.getArticle(news, results))
           .catch(() => news);
     }
     return Promise.resolve(news);
   }
 }
+
+module.exports = ScrapperUtil

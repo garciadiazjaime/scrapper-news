@@ -1,5 +1,5 @@
 
-export default {
+module.exports = {
   source: {
     aristeguinoticias: {
       code: 'aristeguinoticias',

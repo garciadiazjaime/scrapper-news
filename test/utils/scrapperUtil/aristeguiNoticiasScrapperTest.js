@@ -23,7 +23,7 @@ describe('AristeguiNoticiasScrapper', () => {
         const news = scrapperUtil.extractNews(constants.source.aristeguinoticias.code, data);
         expect(err).to.equal(null);
         expect(news.length).to.equal(10);
-        expect(news[0]).to.have.all.keys('title', 'image', 'link', 'source');
+        expect(news[0]).to.have.all.keys('title', 'image', 'url', 'source');
         done();
       });
     });
