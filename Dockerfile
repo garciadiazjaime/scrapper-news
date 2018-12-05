@@ -1,4 +1,4 @@
-FROM node:boron
+FROM node:carbon
 
 ADD package.json /tmp/package.json
 
