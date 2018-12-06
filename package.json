@@ -4,7 +4,6 @@
   "main": "start.js",
   "scripts": {
     "start": "node --use_strict build/main.js",
-    "build": "./node_modules/babel-cli/bin/babel.js src -d build",
     "scrapper": "node --use_strict build/main.js",
     "test": "npm run lint && npm run unittest",
     "unittest": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js",

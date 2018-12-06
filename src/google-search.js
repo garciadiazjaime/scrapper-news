@@ -76,7 +76,7 @@ async function doGoogleSearch(query) {
   return results;
 }
 
-async function saveResults(apiURL, analysisId, data = []) {
+async function saveResults(apiURL, { _id: analysisId, newsId }, data = []) {
   if (!apiURL || !data || !data.length) {
     debug(`omiting saving results for analysis ${analysisId}`);
     return null;
@@ -88,6 +88,7 @@ async function saveResults(apiURL, analysisId, data = []) {
     uri: `${apiURL}google-results`,
     body: {
       analysisId,
+      newsId,
       data,
     },
     json: true,
@@ -107,7 +108,7 @@ async function runGoogleQueries(apiURL, analysisList = [], timeout = 1000) {
   const query = getQuery(analysis.wordsFrequency);
   const results = await doGoogleSearch(query);
 
-  await saveResults(apiURL, analysis._id, results); //eslint-disable-line
+  await saveResults(apiURL, analysis, results); //eslint-disable-line
 
   setTimeout(() => {
     runGoogleQueries(apiURL, analysisList.slice(1));
