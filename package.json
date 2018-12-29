@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "start.js",
   "scripts": {
-    "start": "node --use_strict build/main.js",
+    "start": "DEBUG=* node src/main.js",
     "scrapper": "node --use_strict build/main.js",
     "test": "npm run lint && npm run unittest",
     "unittest": "./node_modules/mocha/bin/mocha --compilers js:babel-core/register test/**/**Test.js",

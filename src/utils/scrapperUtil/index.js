@@ -17,12 +17,15 @@ class ScrapperUtil {
   // @param {string} url
   // @return {promise} Resolves when request succed otherwise rejects
   static getSource(url) {
-    if (!isEmpty(url)) {
-      return new Promise((resolve, reject) => {
-        request(url)
-          .then(htmlString => resolve(htmlString))
-          .catch(err => reject(err));
-      });
+    if (url) {
+      const options = {
+        url,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3653.0 Safari/537.36'
+        }
+      }
+
+      return request(options)
     }
     return false;
   };
