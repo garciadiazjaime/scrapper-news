@@ -1,9 +1,14 @@
 const cheerio = require('cheerio');
-const debug = require('debug')('scrape:aristeguiNoticias');
+const debug = require('debug')('scrape:eleconomista');
 
 const ScrapperUtil = require('../utils/scrapperUtil');
 const constants = require('../constants');
 const config = require('../config');
+
+const invalidText = [
+  'Archivado en:',
+  '[email protected]',
+];
 
 function extractNewsUrls(htmlString) {
   if (!htmlString) {
@@ -11,16 +16,17 @@ function extractNewsUrls(htmlString) {
   }
 
   const jQuery = cheerio.load(htmlString);
+  const { url: sourceUrl } = constants.source.eleconomista;
 
-  const urls = jQuery('.img_principal .imgTML')
+  const urls = jQuery('div.pb article[itemtype="http://schema.org/Article"].entry-box')
     .toArray()
-    .map(element => jQuery(element).find('a').attr('href'));
+    .map(element => jQuery(element).find('a.cover-link').attr('href'));
 
-  return urls;
+  return urls.map(url => `${sourceUrl}${url}`);
 }
 
 async function getNewsUrls() {
-  const { url } = constants.source.aristeguinoticias;
+  const { url } = constants.source.eleconomista;
   const response = await ScrapperUtil.getSource(url);
 
   const urls = extractNewsUrls(response);
@@ -36,38 +42,30 @@ function extractNewsData(htmlString) {
 
   const url = jQuery('link[rel=canonical]').attr('href');
 
-  let title = jQuery('.class_subtitular h1').text();
-  if (!title) {
-    title = jQuery('.top .title_time h1').text();
-  }
-  if (!title) {
-    title = jQuery('.top .class_subtitular').text();
-  }
+  const title = jQuery('.entry-top .title h1').text();
 
   const description = [];
-  jQuery('div.container_left div.class_text p').filter((index, element) => {
-    if (jQuery(element).text()) {
-      description.push(jQuery(element).text());
+  jQuery('.entry-body p').each((index, element) => {
+    const text = jQuery(element).text().replace(/[\t\n]+/g, '').trim();
+    if (text && text.length && !invalidText.includes(text)) {
+      description.push(text);
     }
-  });
+  }, []);
   if (!description.length) {
-    jQuery('div.container_left div.class_text2').filter((index, element) => {
+    jQuery('.entry-top p').each((index, element) => {
       description.push(jQuery(element).text());
     });
   }
-  if (!description.length) {
-    description.push(jQuery('div#video_center p.sub_content_videos').text());
-  }
 
-  const image = jQuery('.img_notaterminal img').attr('src');
+  const image = jQuery('figure.img-top img').attr('src');
 
-  const { source } = constants.source.aristeguinoticias;
+  const { source, url: sourceUrl } = constants.source.eleconomista;
 
   return {
     url,
     title,
     description,
-    image,
+    image: `${sourceUrl}${image}`,
     source,
   };
 }
@@ -103,7 +101,9 @@ function scraper() {
     debug('extracting news');
 
     const newsUrls = await getNewsUrls();
+
     const news = await getNews(newsUrls);
+
     const response = await saveNews(news);
 
     debug(response);

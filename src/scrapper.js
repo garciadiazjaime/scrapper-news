@@ -1,7 +1,8 @@
-const aristeguiNoticias = require('./scraper/aristeguiNoticias');
+const scrapers = require('./scraper');
 
 async function runScrapper() {
-  await aristeguiNoticias();
+  const promises = scrapers.map(scrape => scrape());
+  await Promise.all(promises);
 }
 
 module.exports = runScrapper;

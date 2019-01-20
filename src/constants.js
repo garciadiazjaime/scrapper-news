@@ -2,22 +2,22 @@
 module.exports = {
   source: {
     aristeguinoticias: {
-      code: 'aristeguinoticias',
+      source: 'aristeguinoticias',
       url: 'https://aristeguinoticias.com',
       status: true,
     },
     eleconomista: {
-      code: 'eleconomista',
+      source: 'eleconomista',
       url: 'https://www.eleconomista.com.mx',
       status: true,
     },
     proceso: {
-      code: 'proceso',
+      source: 'proceso',
       url: 'https://www.proceso.com.mx',
       status: true,
     },
     eluniversal: {
-      code: 'eluniversal',
+      source: 'eluniversal',
       url: 'https://www.eluniversal.com.mx',
       status: true,
     },
