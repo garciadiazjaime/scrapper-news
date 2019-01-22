@@ -2,13 +2,9 @@ const cheerio = require('cheerio');
 const debug = require('debug')('scrape:eleconomista');
 
 const ScrapperUtil = require('../utils/scrapperUtil');
+const { cleanString } = require('../utils/stringHelper');
 const constants = require('../constants');
 const config = require('../config');
-
-const invalidText = [
-  'Archivado en:',
-  '[email protected]',
-];
 
 function extractNewsUrls(htmlString) {
   if (!htmlString) {
@@ -20,7 +16,13 @@ function extractNewsUrls(htmlString) {
 
   const urls = jQuery('div.pb article[itemtype="http://schema.org/Article"].entry-box')
     .toArray()
-    .map(element => jQuery(element).find('a.cover-link').attr('href'));
+    .map((element) => {
+      let url = jQuery(element).find('a.cover-link').attr('href');
+      if (!url) {
+        url = jQuery(element).find('.entry-data a').attr('href');
+      }
+      return url;
+    });
 
   return urls.map(url => `${sourceUrl}${url}`);
 }
@@ -42,18 +44,21 @@ function extractNewsData(htmlString) {
 
   const url = jQuery('link[rel=canonical]').attr('href');
 
-  const title = jQuery('.entry-top .title h1').text();
+  const title = cleanString(jQuery('.entry-top .title h1').text());
 
-  const description = [];
-  jQuery('.entry-body p').each((index, element) => {
-    const text = jQuery(element).text().replace(/[\t\n]+/g, '').trim();
-    if (text && text.length && !invalidText.includes(text)) {
-      description.push(text);
-    }
-  }, []);
+  const description = jQuery('.entry-body p')
+    .toArray()
+    .reduce((accumulator, element) => {
+      const text = cleanString(jQuery(element).text());
+      if (text && text.length) {
+        accumulator.push(text);
+      }
+      return accumulator;
+    }, []);
   if (!description.length) {
     jQuery('.entry-top p').each((index, element) => {
-      description.push(jQuery(element).text());
+      const text = cleanString(jQuery(element).text());
+      description.push(text);
     });
   }
 

@@ -1,10 +1,10 @@
 const cheerio = require('cheerio');
-const debug = require('debug')('scrape:aristeguiNoticias');
+const debug = require('debug')('scrape:eleconomista');
 
 const ScrapperUtil = require('../utils/scrapperUtil');
-const { cleanString } = require('../utils/stringHelper');
 const constants = require('../constants');
 const config = require('../config');
+const { cleanString } = require('../utils/stringHelper');
 
 function extractNewsUrls(htmlString) {
   if (!htmlString) {
@@ -13,15 +13,15 @@ function extractNewsUrls(htmlString) {
 
   const jQuery = cheerio.load(htmlString);
 
-  const urls = jQuery('.img_principal .imgTML')
+  const urls = jQuery('.main-featured ul.slides li')
     .toArray()
-    .map(element => jQuery(element).find('a').attr('href'));
+    .map(element => jQuery(element).find('.caption a').attr('href'));
 
   return urls;
 }
 
 async function getNewsUrls() {
-  const { url } = constants.source.aristeguinoticias;
+  const { url } = constants.source.proceso;
   const response = await ScrapperUtil.getSource(url);
 
   const urls = extractNewsUrls(response);
@@ -37,15 +37,9 @@ function extractNewsData(htmlString) {
 
   const url = jQuery('link[rel=canonical]').attr('href');
 
-  let title = cleanString(jQuery('.class_subtitular h1').text());
-  if (!title) {
-    title = cleanString(jQuery('.top .title_time h1').text());
-  }
-  if (!title) {
-    title = cleanString(jQuery('.titular .class_subtitular').text());
-  }
+  const title = cleanString(jQuery('article h1.post-title').text());
 
-  const description = jQuery('div.container_left div.class_text p')
+  const description = jQuery('.post-content.description p')
     .toArray()
     .reduce((accumulator, element) => {
       const text = cleanString(jQuery(element).text());
@@ -54,27 +48,11 @@ function extractNewsData(htmlString) {
       }
       return accumulator;
     }, []);
-  if (!description.length) {
-    jQuery('div.container_left div.class_text2').each((element) => {
-      const text = cleanString(jQuery(element).text());
-      if (text) {
-        description.push(text);
-      }
-    });
-  }
-  if (!description.length) {
-    const text = cleanString(jQuery('div#video_center p.sub_content_videos').text());
-    if (text) {
-      description.push(text);
-    }
-  }
 
-  let image = jQuery('.img_notaterminal img').attr('src');
-  if (!image) {
-    image = jQuery('#video_center meta').attr('content');
-  }
 
-  const { source } = constants.source.aristeguinoticias;
+  const image = jQuery('article .featured img').attr('data-src');
+
+  const { source } = constants.source.proceso;
 
   return {
     url,
@@ -116,6 +94,7 @@ function scraper() {
     debug('extracting news');
 
     const newsUrls = await getNewsUrls();
+
     const news = await getNews(newsUrls);
 
     const response = await saveNews(news);
