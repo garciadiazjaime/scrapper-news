@@ -1,10 +1,10 @@
 const cheerio = require('cheerio');
-const debug = require('debug')('scrape:proceso');
+const debug = require('debug')('scrape:eluniversal');
 
 const ScrapperUtil = require('../utils/scrapperUtil');
+const { cleanString } = require('../utils/stringHelper');
 const constants = require('../constants');
 const config = require('../config');
-const { cleanString } = require('../utils/stringHelper');
 
 function extractNewsUrls(htmlString) {
   if (!htmlString) {
@@ -12,16 +12,17 @@ function extractNewsUrls(htmlString) {
   }
 
   const jQuery = cheerio.load(htmlString);
+  const { url: sourceUrl } = constants.source.eluniversal;
 
-  const urls = jQuery('.main-featured ul.slides li')
+  const urls = jQuery('div.view-home div.views-row h1 a, div.view-home div.views-row h3 a')
     .toArray()
-    .map(element => jQuery(element).find('.caption a').attr('href'));
+    .map(element => `${sourceUrl}${jQuery(element).attr('href')}`);
 
   return urls;
 }
 
 async function getNewsUrls() {
-  const { url } = constants.source.proceso;
+  const { url } = constants.source.eluniversal;
   const response = await ScrapperUtil.getSource(url);
 
   const urls = extractNewsUrls(response);
@@ -35,11 +36,11 @@ function extractNewsData(htmlString) {
   }
   const jQuery = cheerio.load(htmlString);
 
-  const url = jQuery('link[rel=canonical]').attr('href');
+  const url = jQuery('meta[property="og:url"]').attr('content');
 
-  const title = cleanString(jQuery('article h1.post-title').text());
+  const title = cleanString(jQuery('.panel-pane.pane-node-title h1').text());
 
-  const description = jQuery('.post-content.description p')
+  const description = jQuery('div#apertura div.pane-content p')
     .toArray()
     .reduce((accumulator, element) => {
       const text = cleanString(jQuery(element).text());
@@ -49,10 +50,12 @@ function extractNewsData(htmlString) {
       return accumulator;
     }, []);
 
+  let image = jQuery('.pane-entity-field .field-type-image img').attr('src');
+  if (!image) {
+    image = jQuery('.view-mode-video_en_nota img').attr('src');
+  }
 
-  const image = jQuery('article .featured img').attr('data-src');
-
-  const { source } = constants.source.proceso;
+  const { source } = constants.source.eluniversal;
 
   return {
     url,
