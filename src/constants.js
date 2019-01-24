@@ -21,5 +21,10 @@ module.exports = {
       url: 'https://www.eluniversal.com.mx',
       status: true,
     },
+    excelsior: {
+      source: 'excelsior',
+      url: 'https://www.excelsior.com.mx',
+      status: true,
+    },
   },
 };
